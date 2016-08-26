@@ -47,6 +47,18 @@ export default {
     }
   },
 
+  // 根据role id来获取对应的race skill -- 角色role id
+  getRaceSkillByRoleId (roleId) {
+    if (roleId !== undefined && roleId != null) {
+      for (let i = 0; i < Store.roles.length; i++) {
+        if (Store.roles[i].id === roleId) {
+          return Store.roles[i]
+        }
+      }
+    }
+    return ''
+  },
+
   // 添加种族技能 -- 技能id，[角色索引]
   addRaceSkill (skillId, playerIdx) {
     playerIdx !== undefined && playerIdx != null ? playerIdx : playerIdx = Game.currentPlayerIdx

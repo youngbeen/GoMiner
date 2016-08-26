@@ -1,7 +1,7 @@
 import Store from '../models/Store'
 
 export default {
-  // 更改能量 -- 索引，变动值
+  // 更改能量 -- 角色索引，变动值
   changeEnergy (idx, changeValue) {
     if (idx !== undefined && idx != null && Store.characters[idx]) {
       changeValue = changeValue || 0

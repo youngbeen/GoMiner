@@ -164,4 +164,8 @@ export default {
   background-color: rgb(193,201,242);
   box-shadow: 1px 1px 2px rgb(26,27,29);
 }
+
+.skill-pic {
+
+}
 </style>

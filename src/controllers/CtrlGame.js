@@ -9,6 +9,7 @@ import CtrlEnergy from './CtrlEnergy'
 import CtrlGold from './CtrlGold'
 import CtrlMagic from './CtrlMagic'
 import CtrlSp from './CtrlSp'
+import CtrlSkill from './CtrlSkill'
 import UtilGame from '../utils/UtilGame'
 
 export default {
@@ -199,9 +200,8 @@ export default {
   // 初始化角色 --
   initCharacterRole () {
     // 现在不允许自由选择角色，随机分配生成
-    // TODO: 当前暂时只从0，1两个角色中生成
-    CtrlCharacter.changeRole(0, 0)
-    CtrlCharacter.changeRole(1, 1)
+    // TODO: 测试阶段，指定分配的角色跟技能
+    CtrlCharacter.changeRole(0, 1)
     // let playerCounts = Store.characters.length
     // let roles = UtilGame.multiDice(playerCounts, 12)
     //
@@ -212,11 +212,13 @@ export default {
 
   // 初始化角色技能 --
   initCharacterSkill () {
-    CtrlCharacter.addRaceSkill(0, 0)
-    CtrlCharacter.addGivenSkill(0, 0)
-    CtrlCharacter.addGivenSkill(1, 0)
-    CtrlCharacter.addRaceSkill(1, 1)
-    CtrlCharacter.addGivenSkill(1, 1)
+    let playerCounts = Store.characters.length
+
+    for (let i = 0; i < playerCounts; i++) {
+      let roleInfo = CtrlCharacter.getRaceSkillByRoleId(Store.characters[i].role)
+      // 将对应的race skill 添加到角色数据里面
+      CtrlCharacter.addRaceSkill(roleInfo.raceSkill, i)
+    }
   },
 
   // 初始化角色位置 --
@@ -397,9 +399,17 @@ export default {
       CtrlEnergy.changeEnergy(Game.currentPlayerIdx, -1)
       // 成功扣除能量，开始清理dirt
       let damage = Store.characters[Game.currentPlayerIdx].power
+      // 蛮力 race skill
+      if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(1) !== -1) {
+        damage = CtrlSkill.rBigPower()
+      }
       CtrlBlock.changeDirt(blockIdx, -1 * damage)
       // 清理一次灰土增加4SP
       CtrlSp.changeSp(Game.currentPlayerIdx, 4)
+      // 灰土挑拣 race skill 并且dirt已经被破坏
+      if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(0) !== -1 && Block.blocks[blockIdx].dirt === 0) {
+        CtrlSkill.rGainDirt()
+      }
 
       CtrlEffect.playSound('dig-dirt')
     } else {
@@ -419,6 +429,10 @@ export default {
       CtrlEnergy.changeEnergy(Game.currentPlayerIdx, -2)
       // 成功扣除能量，开始清理rock
       let damage = Store.characters[Game.currentPlayerIdx].power
+      // 蛮力 race skill
+      if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(1) !== -1) {
+        damage = CtrlSkill.rBigPower()
+      }
       CtrlBlock.changeRock(blockIdx, -1 * damage)
       // 清理一次岩石增加6SP
       CtrlSp.changeSp(Game.currentPlayerIdx, 6)
@@ -441,6 +455,10 @@ export default {
       CtrlEnergy.changeEnergy(Game.currentPlayerIdx, -1)
       // 成功扣除能量，开始清理chest
       let damage = Store.characters[Game.currentPlayerIdx].power
+      // 蛮力 race skill
+      if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(1) !== -1) {
+        damage = CtrlSkill.rBigPower()
+      }
       CtrlBlock.changeChest(blockIdx, -1 * damage)
       // 清理一次宝箱增加3SP
       CtrlSp.changeSp(Game.currentPlayerIdx, 3)
