@@ -201,7 +201,7 @@ export default {
   initCharacterRole () {
     // 现在不允许自由选择角色，随机分配生成
     // TODO: 测试阶段，指定分配的角色跟技能
-    CtrlCharacter.changeRole(0, 3)
+    CtrlCharacter.changeRole(0, 5)
     // let playerCounts = Store.characters.length
     // let roles = UtilGame.multiDice(playerCounts, 12)
     //
@@ -514,7 +514,10 @@ export default {
   eatFood (blockIdx) {
     // 食物补充能量值相对固定，约5~10
     let foodEnergy = UtilGame.dice(10, 5)
-
+    // 暴食 race skill
+    if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(5) !== -1) {
+      foodEnergy = CtrlSkill.rHurgerEat(foodEnergy)
+    }
     CtrlEnergy.changeEnergy(Game.currentPlayerIdx, foodEnergy)
 
     // 播放音效

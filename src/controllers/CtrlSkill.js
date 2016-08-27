@@ -43,5 +43,15 @@ export default {
     } else {
       return 0
     }
+  },
+
+  // 暴食 -- 原始回复能量值
+  rHurgerEat (erg) {
+    if (erg !== undefined && erg != null) {
+      // 食用食物可以获得额外1点能量
+      return (erg + 1)
+    } else {
+      return 0
+    }
   }
 }

@@ -192,11 +192,11 @@ export default {
           // 可移动
           this.cursor = 'pointer'
           return
+        } else if (blockIdx === Store.characters[Game.currentPlayerIdx].location) {
+          // 角色本身
+          this.cursor = 'pointer'
+          return
         }
-      } else if (blockIdx === Store.characters[Game.currentPlayerIdx].location) {
-        // 角色本身
-        this.cursor = 'pointer'
-        return
       } else {
         // 非空block，判断是否可挖掘
         // 机械手臂 race skill
