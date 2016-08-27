@@ -201,7 +201,7 @@ export default {
   initCharacterRole () {
     // 现在不允许自由选择角色，随机分配生成
     // TODO: 测试阶段，指定分配的角色跟技能
-    CtrlCharacter.changeRole(0, 1)
+    CtrlCharacter.changeRole(0, 3)
     // let playerCounts = Store.characters.length
     // let roles = UtilGame.multiDice(playerCounts, 12)
     //
@@ -273,28 +273,28 @@ export default {
 
     let blockIdx = CtrlBlock.getBlockIdx(rowIdx, colIdx)
     let noAct = false    // 是否不消耗行动
-    // 当目标block有效，角色未行动，并且角色仍然有能力的情况下，才执行
+    // 当目标block有效，角色未行动，并且角色仍然有能量的情况下，才执行
     if (Block.blocks[blockIdx] && !Store.characters[Game.currentPlayerIdx].hasActed && Store.characters[Game.currentPlayerIdx].energy > 0) {
       if (Block.blocks[blockIdx].dirt > 0) {
         // 处理dirt
-        // 检查是否可以挖掘
-        if (CtrlBlock.isAroundPlayer(blockIdx)) {
+        // 检查是否可以挖掘, 机械手臂 race skill
+        if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
           this.digDirt(blockIdx)
         } else {
           noAct = true
         }
       } else if (Block.blocks[blockIdx].rock > 0) {
         // 处理rock
-        // 检查是否可以挖掘
-        if (CtrlBlock.isAroundPlayer(blockIdx)) {
+        // 检查是否可以挖掘, 机械手臂 race skill
+        if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
           this.digRock(blockIdx)
         } else {
           noAct = true
         }
       } else if (Block.blocks[blockIdx].chest > 0) {
         // 处理chest
-        // 检查是否可以挖掘
-        if (CtrlBlock.isAroundPlayer(blockIdx)) {
+        // 检查是否可以挖掘, 机械手臂 race skill
+        if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
           this.digChest(blockIdx)
         } else {
           noAct = true
@@ -304,8 +304,8 @@ export default {
         switch (Block.blocks[blockIdx].inside) {
           case 'gold':
             // 角色获取金币
-            // 检查是否可以挖掘
-            if (CtrlBlock.isAroundPlayer(blockIdx)) {
+            // 检查是否可以挖掘, 机械手臂 race skill
+            if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
               this.pickGold(blockIdx)
             } else {
               noAct = true
@@ -313,8 +313,8 @@ export default {
             break
           case 'food':
             // 角色食用食物
-            // 检查是否可以挖掘
-            if (CtrlBlock.isAroundPlayer(blockIdx)) {
+            // 检查是否可以挖掘, 机械手臂 race skill
+            if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
               this.eatFood(blockIdx)
             } else {
               noAct = true
@@ -322,8 +322,8 @@ export default {
             break
           case 'potion':
             // 角色使用药剂
-            // 检查是否可以挖掘
-            if (CtrlBlock.isAroundPlayer(blockIdx)) {
+            // 检查是否可以挖掘, 机械手臂 race skill
+            if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
               this.drinkPotion(blockIdx)
             } else {
               noAct = true
@@ -331,8 +331,8 @@ export default {
             break
           case 'fire':
             // 角色使用火焰
-            // 检查是否可以挖掘
-            if (CtrlBlock.isAroundPlayer(blockIdx)) {
+            // 检查是否可以挖掘, 机械手臂 race skill
+            if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
               this.useFire(blockIdx)
             } else {
               noAct = true
@@ -340,8 +340,8 @@ export default {
             break
           case 'random':
             // 角色使用机会
-            // 检查是否可以挖掘
-            if (CtrlBlock.isAroundPlayer(blockIdx)) {
+            // 检查是否可以挖掘, 机械手臂 race skill
+            if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
               this.takeChance(blockIdx)
             } else {
               noAct = true
@@ -349,8 +349,8 @@ export default {
             break
           case 'trap':
             // 角色触发陷阱，一般来说不会走到这个分支，因为陷阱会在出现的时候自动触发
-            // 检查是否可以挖掘
-            if (CtrlBlock.isAroundPlayer(blockIdx)) {
+            // 检查是否可以挖掘, 机械手臂 race skill
+            if (CtrlBlock.isAroundPlayer(blockIdx) || (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1 && CtrlBlock.isNearPlayer(blockIdx))) {
               this.triggerTrap(blockIdx)
             } else {
               noAct = true
@@ -498,6 +498,10 @@ export default {
   pickGold (blockIdx) {
     // 金币数量已经提前生成好，直接拾取
     let pickedGold = Block.blocks[blockIdx].num || 0
+    // 矮人血脉 race skill
+    if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(3) !== -1) {
+      pickedGold = CtrlSkill.rDwrafBlood(pickedGold)
+    }
     CtrlGold.changeGold(Game.currentPlayerIdx, pickedGold)
 
     // 播放音效
@@ -559,12 +563,28 @@ export default {
     // 检查是否可以移动到目标block
     if (CtrlBlock.isBlockAvailable(blockIdx)) {
       // 可以移动
-      CtrlCharacter.movePlayer(blockIdx)
+      // 扣除1点能量
+      if (Store.characters[Game.currentPlayerIdx].energy >= 1) {
+        // 迅捷 race skill
+        if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(4) === -1) {
+          CtrlEnergy.changeEnergy(Game.currentPlayerIdx, -1)
+        }
 
-      // 播放音效
-      // CtrlEffect.playSound('walk')
+        // 成功扣除能量，开始移动
+        CtrlCharacter.movePlayer(blockIdx)
 
-      return true
+        // 播放音效
+        // CtrlEffect.playSound('walk')
+
+        return true
+      } else {
+        // 即使能量不够，强行移动还是扣除能量
+        CtrlEnergy.changeEnergy(Game.currentPlayerIdx, -1)
+
+        // CtrlEffect.playSound('move-fail')
+        window.alert('能量不足！')
+        return false
+      }
     } else {
       // 非法移动，不允许
       return false

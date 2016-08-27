@@ -14,8 +14,8 @@
             </div>
             <div class="col-md-8">
               <div class="row">
-                <div class="col-md-4">{{ item.text }}</div>
-                <div class="col-md-8">{{ item.description }}</div>
+                <div class="col-md-4 skill-name">{{ item.text }}</div>
+                <div class="col-md-8 skill-desc">{{ item.description }}</div>
               </div>
             </div>
           </div>
@@ -24,12 +24,12 @@
         <div class="box-givenskill" v-for="item in givenSkills">
           <div class="row">
             <div class="col-md-4">
-              <img v-bind:src="item.imgUrl" alt="图片" class="skill-pic">
+              <img v-bind:src="item.imgUrl" alt="图片" class="givenskill-pic">
             </div>
             <div class="col-md-8">
               <div class="row">
-                <div class="col-md-4">{{ item.text }}</div>
-                <div class="col-md-8">{{ item.description }}</div>
+                <div class="col-md-4 skill-name">{{ item.text }}</div>
+                <div class="col-md-8 skill-desc">{{ item.description }}</div>
               </div>
             </div>
           </div>
@@ -153,9 +153,10 @@ export default {
 
 .box-raceskill {
   margin: 0 8px 8px;
+  padding: 10px;
 
-  background-color: rgb(233,231,226);
-  box-shadow: 1px 1px 2px rgb(26,27,29);
+  background-color: rgba(240, 240, 240, 1);
+  box-shadow: 1px 1px 2px rgba(26,27,29,.6);
 }
 
 .box-givenskill {
@@ -166,6 +167,26 @@ export default {
 }
 
 .skill-pic {
+  width: 48px;
+  height: 48px;
+}
 
+.givenskill-pic {
+  width: 48px;
+  height: 48px;
+
+  cursor: pointer;
+}
+
+.skill-name {
+  color: rgb(224,124,86);
+  font-size: 20px;
+}
+
+.skill-desc {
+  color: rgb(184,187,177);
+
+  text-align: left;
+  font-size: 12px;
 }
 </style>

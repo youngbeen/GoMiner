@@ -33,5 +33,15 @@ export default {
 
     // power +1
     return Store.characters[Game.currentPlayerIdx].power + 1
+  },
+
+  // 矮人血脉 -- 原始金币数量
+  rDwrafBlood (gold) {
+    if (gold !== undefined && gold != null) {
+      // 获取的金币数量增加10%
+      return Math.round(gold * 1.1)
+    } else {
+      return 0
+    }
   }
 }

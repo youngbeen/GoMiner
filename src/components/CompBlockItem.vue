@@ -193,12 +193,25 @@ export default {
           this.cursor = 'pointer'
           return
         }
+      } else if (blockIdx === Store.characters[Game.currentPlayerIdx].location) {
+        // 角色本身
+        this.cursor = 'pointer'
+        return
       } else {
         // 非空block，判断是否可挖掘
-        if (CtrlBlock.isAroundPlayer(blockIdx)) {
-          // 可挖掘
-          this.cursor = 's-resize'
-          return
+        // 机械手臂 race skill
+        if (Store.characters[Game.currentPlayerIdx].raceSkills.indexOf(2) !== -1) {
+          if (CtrlBlock.isNearPlayer(blockIdx)) {
+            // 可挖掘
+            this.cursor = 's-resize'
+            return
+          }
+        } else {
+          if (CtrlBlock.isAroundPlayer(blockIdx)) {
+            // 可挖掘
+            this.cursor = 's-resize'
+            return
+          }
         }
       }
 
